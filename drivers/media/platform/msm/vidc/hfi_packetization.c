@@ -639,6 +639,12 @@ static int get_hfi_extradata_index(enum hal_extradata_id index)
 	case HAL_EXTRADATA_VUI_DISPLAY_INFO:
 		ret = HFI_PROPERTY_PARAM_VUI_DISPLAY_INFO_EXTRADATA;
 		break;
+	case HAL_EXTRADATA_VUI_DISPLAY_INFO:
+		ret = HFI_PROPERTY_PARAM_VUI_DISPLAY_INFO_EXTRADATA;
+		break;
+	case HAL_EXTRADATA_VPX_COLORSPACE:
+		ret = HFI_PROPERTY_PARAM_VDEC_VPX_COLORSPACE_EXTRADATA;
+		break;
 	default:
 		dprintk(VIDC_WARN, "Extradata index not found: %d\n", index);
 		break;
@@ -2030,11 +2036,15 @@ int create_pkt_cmd_session_set_property(
 	}
 	case HAL_PARAM_VENC_VIDEO_SIGNAL_INFO:
 	{
+<<<<<<< HEAD
 		u32 color_space, matrix_coeffs, transfer_chars;
+=======
+>>>>>>> 0b3b5fb... msm: vidc: Add support for color space information
 		struct hal_video_signal_info *hal = pdata;
 		struct hfi_video_signal_metadata *signal_info =
 			(struct hfi_video_signal_metadata *)
 			&pkt->rg_property_data[1];
+<<<<<<< HEAD
 
 		switch (hal->color_space) {
 		/* See colour_primaries of ISO/IEC 14496 for significance */
@@ -2060,6 +2070,17 @@ int create_pkt_cmd_session_set_property(
 		signal_info->transfer_characteristics = transfer_chars;
 		signal_info->matrix_coeffs = matrix_coeffs;
 
+=======
+
+		signal_info->enable = true;
+		signal_info->video_format = MSM_VIDC_NTSC;
+		signal_info->video_full_range = hal->full_range;
+		signal_info->color_description = MSM_VIDC_COLOR_DESC_PRESENT;
+		signal_info->color_primaries = hal->color_space;
+		signal_info->transfer_characteristics = hal->transfer_chars;
+		signal_info->matrix_coeffs = hal->matrix_coeffs;
+
+>>>>>>> 0b3b5fb... msm: vidc: Add support for color space information
 		pkt->rg_property_data[0] =
 			HFI_PROPERTY_PARAM_VENC_VIDEO_SIGNAL_INFO;
 		pkt->size += sizeof(u32) + sizeof(*signal_info);
