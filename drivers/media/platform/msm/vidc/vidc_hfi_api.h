@@ -118,7 +118,6 @@ enum hal_extradata_id {
 	HAL_EXTRADATA_LTR_INFO,
 	HAL_EXTRADATA_METADATA_MBI,
 	HAL_EXTRADATA_VUI_DISPLAY_INFO,
-	HAL_EXTRADATA_VPX_COLORSPACE,
 };
 
 enum hal_property {
@@ -968,10 +967,8 @@ enum hal_video_color_space {
 };
 
 struct hal_video_signal_info {
-	u32 color_space;
-	u32 transfer_chars;
-	u32 matrix_coeffs;
-	bool full_range;
+	enum hal_video_color_space color_space;
+	bool clamped;
 };
 
 enum vidc_resource_id {
