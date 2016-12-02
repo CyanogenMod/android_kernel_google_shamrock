@@ -645,14 +645,14 @@ struct hfi_frame_size {
 };
 
 struct hfi_video_signal_metadata {
-	u32 enable;
-	u32 video_format;
-	u32 video_full_range;
-	u32 color_description;
-	u32 color_primaries;
-	u32 transfer_characteristics;
-	u32 matrix_coeffs;
-};
+ 	u32 enable;
+ 	u32 video_format;
+ 	u32 video_full_range;
+ 	u32 color_description;
+ 	u32 color_primaries;
+ 	u32 transfer_characteristics;
+ 	u32 matrix_coeffs;
+ };
 
 struct hfi_h264_vui_timing_info {
 	u32 enable;
