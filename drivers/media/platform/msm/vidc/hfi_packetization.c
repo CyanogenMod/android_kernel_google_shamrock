@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -639,9 +639,6 @@ static int get_hfi_extradata_index(enum hal_extradata_id index)
 	case HAL_EXTRADATA_VUI_DISPLAY_INFO:
 		ret = HFI_PROPERTY_PARAM_VUI_DISPLAY_INFO_EXTRADATA;
 		break;
-	case HAL_EXTRADATA_VPX_COLORSPACE:
- 		ret = HFI_PROPERTY_PARAM_VDEC_VPX_COLORSPACE_EXTRADATA;
- 		break;
 	default:
 		dprintk(VIDC_WARN, "Extradata index not found: %d\n", index);
 		break;
@@ -1408,7 +1405,7 @@ int create_pkt_cmd_session_set_property(
 			break;
 		default:
 			dprintk(VIDC_ERR,
-					"Invalid Rate control setting: 0x%pK\n",
+					"Invalid Rate control setting: 0x%p\n",
 					pdata);
 			break;
 		}
@@ -2033,18 +2030,35 @@ int create_pkt_cmd_session_set_property(
 	}
 	case HAL_PARAM_VENC_VIDEO_SIGNAL_INFO:
 	{
+		u32 color_space, matrix_coeffs, transfer_chars;
 		struct hal_video_signal_info *hal = pdata;
 		struct hfi_video_signal_metadata *signal_info =
 			(struct hfi_video_signal_metadata *)
 			&pkt->rg_property_data[1];
 
+		switch (hal->color_space) {
+		/* See colour_primaries of ISO/IEC 14496 for significance */
+		case HAL_VIDEO_COLOR_SPACE_601:
+			color_space = 5;
+			transfer_chars = 6;
+			matrix_coeffs = 5;
+			break;
+		case HAL_VIDEO_COLOR_SPACE_709:
+			color_space = 1;
+			transfer_chars = 1;
+			matrix_coeffs = 1;
+			break;
+		default:
+			return -ENOTSUPP;
+		}
+
 		signal_info->enable = true;
-		signal_info->video_format = MSM_VIDC_NTSC;
-		signal_info->video_full_range = hal->full_range;
-		signal_info->color_description = MSM_VIDC_COLOR_DESC_PRESENT;
-		signal_info->color_primaries = hal->color_space;
-		signal_info->transfer_characteristics = hal->transfer_chars;
-		signal_info->matrix_coeffs = hal->matrix_coeffs;
+		signal_info->video_format = 5;
+		signal_info->video_full_range = !hal->clamped;
+		signal_info->color_description = 1;
+		signal_info->color_primaries = color_space;
+		signal_info->transfer_characteristics = transfer_chars;
+		signal_info->matrix_coeffs = matrix_coeffs;
 
 		pkt->rg_property_data[0] =
 			HFI_PROPERTY_PARAM_VENC_VIDEO_SIGNAL_INFO;
@@ -2109,7 +2123,7 @@ int create_pkt_ssr_cmd(enum hal_ssr_trigger_type type,
 		struct hfi_cmd_sys_test_ssr_packet *pkt)
 {
 	if (!pkt) {
-		dprintk(VIDC_ERR, "Invalid params, device: %pK\n", pkt);
+		dprintk(VIDC_ERR, "Invalid params, device: %p\n", pkt);
 		return -EINVAL;
 	}
 	pkt->size = sizeof(struct hfi_cmd_sys_test_ssr_packet);
@@ -2122,7 +2136,7 @@ int create_pkt_cmd_sys_image_version(
 		struct hfi_cmd_sys_get_property_packet *pkt)
 {
 	if (!pkt) {
-		dprintk(VIDC_ERR, "%s invalid param :%pK\n", __func__, pkt);
+		dprintk(VIDC_ERR, "%s invalid param :%p\n", __func__, pkt);
 		return -EINVAL;
 	}
 	pkt->size = sizeof(struct hfi_cmd_sys_get_property_packet);
