@@ -117,7 +117,14 @@ enum hal_extradata_id {
 	HAL_EXTRADATA_DIGITAL_ZOOM,
 	HAL_EXTRADATA_LTR_INFO,
 	HAL_EXTRADATA_METADATA_MBI,
+<<<<<<< HEAD
 	HAL_EXTRADATA_VUI_DISPLAY_INFO,
+=======
+	HAL_EXTRADATA_MASTERING_DISPLAY_COLOUR_SEI,
+	HAL_EXTRADATA_CONTENT_LIGHT_LEVEL_SEI,
+	HAL_EXTRADATA_VUI_DISPLAY_INFO,
+	HAL_EXTRADATA_VPX_COLORSPACE,
+>>>>>>> b2e3efc... msm: vidc: Add support for color space information
 };
 
 enum hal_property {
@@ -961,14 +968,11 @@ struct hal_vpe_color_space_conversion {
 	u32 csc_limit[HAL_MAX_LIMIT_COEFFS];
 };
 
-enum hal_video_color_space {
-	HAL_VIDEO_COLOR_SPACE_601,
-	HAL_VIDEO_COLOR_SPACE_709,
-};
-
 struct hal_video_signal_info {
-	enum hal_video_color_space color_space;
-	bool clamped;
+	u32 color_space;
+	u32 transfer_chars;
+	u32 matrix_coeffs;
+	bool full_range;
 };
 
 enum vidc_resource_id {

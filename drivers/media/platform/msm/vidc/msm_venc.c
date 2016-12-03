@@ -1145,7 +1145,10 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
 		.step = 1,
 	},
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b2e3efc... msm: vidc: Add support for color space information
 	{
 		.id = V4L2_CID_MPEG_VIDC_VIDEO_COLOR_SPACE,
 		.name = "Set Color space",
@@ -1185,6 +1188,7 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
 		.step = 1,
 		.qmenu = NULL,
 	},
+<<<<<<< HEAD
 	{
 		.id = V4L2_CID_MPEG_VIDC_VIDEO_VPE_CSC,
 		.name = "Set VPE Color space conversion coefficients",
@@ -1196,6 +1200,9 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
 	},
 
 >>>>>>> 9b2777c... msm: vidc: Add control to set csc coefficients to firmware
+=======
+
+>>>>>>> b2e3efc... msm: vidc: Add support for color space information
 };
 
 #define NUM_CTRLS ARRAY_SIZE(msm_venc_ctrls)
@@ -2000,6 +2007,7 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
 	u32 hier_p_layers = 0, hier_b_layers = 0, mbi_statistics_mode = 0;
 	struct hal_venc_perf_mode venc_mode;
 	int max_hierp_layers;
+	struct hal_video_signal_info signal_info = {0};
 
 	if (!inst || !inst->core || !inst->core->device) {
 		dprintk(VIDC_ERR, "%s invalid parameters\n", __func__);
@@ -2925,7 +2933,10 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
 		break;
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b2e3efc... msm: vidc: Add support for color space information
 	case V4L2_CID_MPEG_VIDC_VIDEO_COLOR_SPACE:
 	{
 		signal_info.color_space = ctrl->val;
@@ -2984,6 +2995,7 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
 		pdata = &signal_info;
 		break;
 	}
+<<<<<<< HEAD
 	case V4L2_CID_MPEG_VIDC_VIDEO_VPE_CSC:
 		if (ctrl->val == V4L2_CID_MPEG_VIDC_VIDEO_VPE_CSC_ENABLE) {
 			rc = msm_venc_set_csc(inst);
@@ -2992,6 +3004,8 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
 		}
 		break;
 >>>>>>> 9b2777c... msm: vidc: Add control to set csc coefficients to firmware
+=======
+>>>>>>> b2e3efc... msm: vidc: Add support for color space information
 	default:
 		dprintk(VIDC_ERR, "Unsupported index: %x\n", ctrl->id);
 		rc = -ENOTSUPP;
@@ -3460,10 +3474,6 @@ int msm_venc_s_fmt(struct msm_vidc_inst *inst, struct v4l2_format *f)
 		return -EINVAL;
 	}
 	hdev = inst->core->device;
-
-	if (msm_vidc_vpe_csc_601_to_709) {
-		msm_venc_set_csc(inst);
-	}
 
 	if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
 		fmt = msm_comm_get_pixel_fmt_fourcc(venc_formats,
